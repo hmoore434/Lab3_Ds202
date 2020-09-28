@@ -1,0 +1,91 @@
+---
+title: "Lab3"
+author: "Heather M"
+date: "9/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+data <- readxl::read_xls('Lab3.xls')
+library(ggplot2) 
+library(dplyr)
+library(tidyverse)
+head(data)
+```
+# 1.Find the average years of education for the respondents with each political party affiliation. Arrange your output in a meaningful order and print. Describe any patterns you find. 
+
+
+```{r}
+rename(data, polparty = 'Political party affiliation')
+```
+```
+
+
+```{r}
+Dem <- filter(data, data$'Political party affiliation' == 'Strong democrat')
+Rep <- filter(data, data$'Political party affiliation' == 'Strong republican')
+Indep <- filter(data, data$'Political party affiliation'  == 'Independent')
+ggplot(Dem, aes(x=Dem$'Political party affiliation', y=Dem$'Highest year of school completed')) + geom_point()
+```
+```{r}
+ggplot(Indep, aes(x=Indep$'Political party affiliation', y=Indep$'Highest year of school completed')) + geom_line()
+```
+
+```{r}
+ggplot(data, aes(x='Political party affiliation',)) + geom_boxplot()
+```
+#2.Create a single data frame containing records for the better educated respondents in each political party affiliation. A “better educated” respondent is someone who has strictly more years of education than the median in the same party affiliation. Print the structure of the data frame.
+For each of the investigation below, create at least one numerical summary and one appropriate visualization. Write a paragraph to describe your findings and the variables you used.
+```{r}
+Dem2 <- select(Dem, 'Political party affiliation','Highest year of school completed')
+Demo <- Dem2 %>% top_frac(.85)
+Dem3 <- head(Demo, n = 14)
+Dem3
+```
+```{r}
+ggplot(Dem3, aes(x='Political party affiliation', y='Highest year of school completed')) + geom_point()
+```
+
+```{r}
+Rep2 <- select(Rep, 'Political party affiliation','Highest year of school completed')
+Repu <- Rep2 %>% top_frac(.85)
+Rep3 <- head(Repu, n = 14)
+Rep3
+```
+```{r}
+Indep2 <- select(Indep, 'Political party affiliation','Highest year of school completed')
+Ind <- Indep2 %>% top_frac(.85)
+Ind3 <- head(Ind, n = 14)
+Ind3
+```
+
+Based the data I have in Dem3, Ind3, and Rep3, It looks like each party has a similar education year difference. The avgerage is around 12-13 which is around a high school diploma. That is fair to say most people have at least a high school diploma.  
+
+#Does party affiliation affect the relationship you found in the last question?
+
+#No, not that I have seen. All of the averages are very similar to one another. One affiliation that was different was that Independents were slightly lower average than the democrats and republicans
+
+#How is marrital status related to the education of a respondent? What are possible reasons accounting for the patterns you see?
+It doesn't really have a strong effect on education of a respondent. There are an array of people that come from all different marital statuses. There are a lot more married people who answered the survey than single individuals. 
+#Explore two more interesting questions, and answer those questions using the GSS data.
+ 1. In the Democratic party what race partcipated the most?
+```{r}
+EduDem <- Dem$'Highest year of school completed'
+RaceDem <- Dem$'Race of respondent'
+ggplot(Dem, aes(x=RaceDem, )) + geom_bar()
+```
+#It looks like by a large amount white people were the biggest contributors to this survey
+#2 In this data set who participated the most, Democrats, Republicans, or Indepedents?
+```{r}
+PolParty <- data$'Political party affiliation'
+ggplot(data, aes(x=PolParty, dev.new(width =5,height=8))) + geom_bar()
+
+```
+
+It looks like strong democrats participated in the survey the most, according to the graph. 
+
+
+
